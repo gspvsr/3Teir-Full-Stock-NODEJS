@@ -6,11 +6,23 @@ pipeline {
         nodejs 'nodejs'
     }
 
-    stages {
-        stage('Init') {
+    environment  {
+        SCANNER_HOME=tool 'sonar-scanner'
+        AWS_ACCOUNT_ID = credentials('ACCOUNT_ID')
+        AWS_ECR_REPO_NAME = credentials('ECR_REPO2')
+        AWS_DEFAULT_REGION = 'us-east-1'
+        REPOSITORY_URI = "${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com/"
+    }
+
+    stage('Sonarqube Analysis') {
             steps {
-                echo 'Pipeline started'
+                dir('Application-Code/backend') {
+                    withSonarQubeEnv('sonar-server') {
+                        sh ''' $SCANNER_HOME/bin/sonar-scanner \
+                        -Dsonar.projectName=three-tier-backend \
+                        -Dsonar.projectKey=three-tier-backend '''
+                    }
+                }
             }
         }
-    }
 }
