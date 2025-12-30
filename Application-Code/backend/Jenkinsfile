@@ -36,9 +36,23 @@ pipeline {
         stage('Quality Gate Check') {
             steps {
                 script {
-                    waitForQualityGate abortPipeline: false, credentialsId: 'sonar-creds'
+                    waitForQualityGate abortPipeline: true, credentialsId: 'sonar-creds'
                 }
             }
         } 
+
+        stage('userid'){
+            steps{
+                echo "BUILD_USER_ID"
+            }
+        }
+        stage('OWASP Dependency-Check Scan') {
+            steps {
+                dir('Application-Code/backend') {
+                    dependencyCheck additionalArguments: '--scan ./ --disableYarnAudit --disableNodeAudit', odcInstallation: 'DP-Check'
+                    dependencyCheckPublisher pattern: '**/dependency-check-report.xml'
+                }
+            }
+        }
     }
 }
