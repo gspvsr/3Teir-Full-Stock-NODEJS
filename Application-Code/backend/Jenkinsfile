@@ -43,9 +43,9 @@ pipeline {
 
         stage('userid'){
             steps{
-                wrap([$class 'BuildUser'])
+                wrap([$class: 'BuildUser'])
                 echo "env.BUILD_USER_ID"
-                echo "env.BUILD_useR"
+                echo "env.BUILD_USER"
             }
         }
         stage('OWASP Dependency-Check Scan') {
