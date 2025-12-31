@@ -114,7 +114,7 @@ pipeline {
                 git diff --cached --quiet || git commit -m "Update image to ${BUILD_NUMBER}"
 
                 # Force push safely
-                git push https://${GIT_USER_NAME}:${GITHUB_TOKEN}@github.com/${GIT_USER_NAME}/${GIT_REPO_NAME}.git master --force-with-lease
+                git push https://${GIT_USER_NAME}:${GITHUB_TOKEN}@github.com/${GIT_USER_NAME}/${GIT_REPO_NAME}.git masterX`
                 '''
                 }
             }
