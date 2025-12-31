@@ -74,13 +74,20 @@ pipeline {
                 }
             }
         }
-        stage("ECR Image Pushing") {
+        tage("ECR Image Pushing") {
             steps {
                 script {
-                        sh "aws ecr get-login-password --region ${AWS_DEFAULT_REGION} | docker login --username AWS --password-stdin 385554867848.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com"
-                        sh "docker tag ${AWS_ECR_REPO_NAME}:${BUILD_NUMBER} 385554867848.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com/${AWS_ECR_REPO_NAME}:${BUILD_NUMBER}"
-                        sh "docker push 385554867848.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com/${AWS_ECR_REPO_NAME}:${BUILD_NUMBER}"
+                    def ECR_URI = "${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com"
+                    def IMAGE_TAG = "${ECR_URI}/${AWS_ECR_REPO_NAME}:${BUILD_NUMBER}"
 
+                    sh """
+                        aws ecr get-login-password --region ${AWS_DEFAULT_REGION} |
+                        docker login --username AWS --password-stdin ${ECR_URI}
+
+                        docker tag ${AWS_ECR_REPO_NAME}:${BUILD_NUMBER} ${IMAGE_TAG}
+
+                        docker push ${IMAGE_TAG}
+                    """
                 }
             }
         }
