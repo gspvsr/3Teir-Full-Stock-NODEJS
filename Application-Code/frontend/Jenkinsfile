@@ -60,8 +60,9 @@ pipeline {
             steps {
                 dir('Application-Code/frontend') {
                     sh 'trivy fs . > trivyfs.txt'
+                    echo '${AWS_ECR_REPO_NAME}'
                 }
-                echo "${AWS_ECR_REPO_NAME}"
+                
             }
         }
         stage("Docker Image Build") {
