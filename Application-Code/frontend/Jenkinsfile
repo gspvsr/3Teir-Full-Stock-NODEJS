@@ -74,7 +74,7 @@ pipeline {
                 }
             }
         }
-        tage("ECR Image Pushing") {
+        stage("ECR Image Pushing") {
             steps {
                 script {
                     def ECR_URI = "${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com"
