@@ -9,7 +9,7 @@ pipeline {
     environment  {
         SCANNER_HOME=tool 'sonar-scanner'
         AWS_ACCOUNT_ID = credentials('ACCOUNT_ID')
-        AWS_ECR_REPO_NAME = credentials('ECR_REPO2')
+        AWS_ECR_REPO_NAME = credentials('ECR_REPO1')
         AWS_DEFAULT_REGION = 'us-east-2'
         REPOSITORY_URI = "${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com/"
     }
@@ -50,7 +50,7 @@ pipeline {
        
         // stage('OWASP Dependency-Check Scan') {
         //     steps {
-        //         dir('Application-Code/backend') {
+        //         dir('Application-Code/frontend') {
         //             dependencyCheck additionalArguments: '--scan ./ --disableYarnAudit --disableNodeAudit', odcInstallation: 'DP-Check'
         //             dependencyCheckPublisher pattern: '**/dependency-check-report.xml'
         //         }
@@ -103,19 +103,19 @@ pipeline {
                         git config user.email "gspvsr@gmail.com"
                         git config user.name "gspvsr"
 
-                            git fetch origin
-                            git checkout master
-                            git reset --hard origin/master
+                        git fetch origin
+                        git checkout master
+                        git reset --hard origin/master
 
-                            # Replace image tag with current build number
-                            sed -i "s|${AWS_ECR_REPO_NAME}:.*|${AWS_ECR_REPO_NAME}:${BUILD_NUMBER}|" deployment.yaml
+                        # Replace image tag with current build number
+                        sed -i "s|${AWS_ECR_REPO_NAME}:.*|${AWS_ECR_REPO_NAME}:${BUILD_NUMBER}|" deployment.yaml
 
-                            git add deployment.yaml
-                            git diff --cached --quiet || git commit -m "Update image to ${BUILD_NUMBER}"
+                        git add deployment.yaml
+                        git diff --cached --quiet || git commit -m "Update image to ${BUILD_NUMBER}"
 
-                            # Force push safely
-                            git push https://${GIT_USER_NAME}:${GITHUB_TOKEN}@github.com/${GIT_USER_NAME}/${GIT_REPO_NAME}.git master
-                            '''
+                        # Force push safely
+                        git push https://${GIT_USER_NAME}:${GITHUB_TOKEN}@github.com/${GIT_USER_NAME}/${GIT_REPO_NAME}.git master
+                        '''
                         }
                     }
                 }
