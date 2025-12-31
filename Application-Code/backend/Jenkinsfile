@@ -112,7 +112,7 @@ pipeline {
 
                         git add deployment.yaml
                         git commit -m "Update deployment Image to version ${BUILD_NUMBER}" || echo "No changes"
-
+                        git fetch origin
                         git push https://${GITHUB_TOKEN}@github.com/${GIT_USER_NAME}/${GIT_REPO_NAME} master --force-with-lease
                         '''
                     }
